@@ -87,12 +87,6 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.safetynet.SafetyNet;
 import com.google.zxing.common.detector.MathUtils;
 
 import org.json.JSONException;
@@ -5304,7 +5298,6 @@ public class LoginActivity extends BaseFragment {
 
         private TextView titleView;
         private TextView subtitleView;
-        private TextView signInWithGoogleView;
         private LoginOrView loginOrView;
         private RLottieImageView inboxImageView;
 
@@ -5313,8 +5306,6 @@ public class LoginActivity extends BaseFragment {
 
         private String phone, emailPhone;
         private String requestPhone, phoneHash;
-
-        private GoogleSignInAccount googleAccount;
 
         public LoginActivitySetupEmail(Context context) {
             super(context);
@@ -5370,7 +5361,7 @@ public class LoginActivity extends BaseFragment {
             });
 
             addView(emailOutlineView, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, 58, 16, 24, 16, 0));
-
+            /*
             signInWithGoogleView = new TextView(context);
             signInWithGoogleView.setGravity(Gravity.LEFT);
             signInWithGoogleView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
@@ -5393,19 +5384,19 @@ public class LoginActivity extends BaseFragment {
             }, 1, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             str.append(LocaleController.getString(R.string.SignInWithGoogle));
             signInWithGoogleView.setText(str);
-
+            */
             loginOrView = new LoginOrView(context);
 
             Space space = new Space(context);
             addView(space, LayoutHelper.createLinear(0, 0, 1f));
 
             FrameLayout bottomContainer = new FrameLayout(context);
-            bottomContainer.addView(signInWithGoogleView, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, Gravity.BOTTOM | Gravity.LEFT, 0, 0, 0, 24));
+            //bottomContainer.addView(signInWithGoogleView, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, Gravity.BOTTOM | Gravity.LEFT, 0, 0, 0, 24));
             bottomContainer.addView(loginOrView, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, 16, Gravity.BOTTOM | Gravity.LEFT, 0, 0, 0, 70));
-            loginOrView.setMeasureAfter(signInWithGoogleView);
+            //loginOrView.setMeasureAfter(signInWithGoogleView);
             addView(bottomContainer, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT));
             VerticalPositionAutoAnimator.attach(bottomContainer);
-
+            /*
             bottomContainer.setOnClickListener(view -> {
                 NotificationCenter.getGlobalInstance().addObserver(new NotificationCenter.NotificationCenterDelegate() {
                     @Override
@@ -5432,6 +5423,7 @@ public class LoginActivity extends BaseFragment {
                         .build());
                 googleClient.signOut().addOnCompleteListener(command -> getParentActivity().startActivityForResult(googleClient.getSignInIntent(), BasePermissionsActivity.REQUEST_CODE_SIGN_IN_WITH_GOOGLE));
             });
+             */
         }
 
         @Override
@@ -5439,7 +5431,6 @@ public class LoginActivity extends BaseFragment {
             titleView.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteBlackText));
             subtitleView.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteGrayText6));
             emailField.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteBlackText));
-            signInWithGoogleView.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteBlueText4));
             loginOrView.updateColors();
 
             emailOutlineView.invalidate();
@@ -5469,7 +5460,6 @@ public class LoginActivity extends BaseFragment {
 
             int v = params.getBoolean("googleSignInAllowed") && PushListenerController.GooglePushListenerServiceProvider.INSTANCE.hasServices() ? VISIBLE : GONE;
             loginOrView.setVisibility(v);
-            signInWithGoogleView.setVisibility(v);
 
             showKeyboard(emailField);
             emailField.requestFocus();
@@ -5497,7 +5487,7 @@ public class LoginActivity extends BaseFragment {
                 return;
             }
 
-            String email = googleAccount != null ? googleAccount.getEmail() : emailField.getText().toString();
+            String email = emailField.getText().toString();
             Bundle params = new Bundle();
             params.putString("phone", phone);
             params.putString("ephone", emailPhone);
@@ -5505,7 +5495,7 @@ public class LoginActivity extends BaseFragment {
             params.putString("phoneHash", phoneHash);
             params.putString("email", email);
             params.putBoolean("setup", true);
-
+            /*
             if (googleAccount != null) {
                 TLRPC.TL_account_verifyEmail verifyEmail = new TLRPC.TL_account_verifyEmail();
                 if (activityMode == MODE_CHANGE_LOGIN_EMAIL) {
@@ -5543,6 +5533,7 @@ public class LoginActivity extends BaseFragment {
 
                 return;
             }
+             */
 
             if (TextUtils.isEmpty(email)) {
                 onPasscodeError(false);
@@ -5631,7 +5622,6 @@ public class LoginActivity extends BaseFragment {
         private CodeFieldContainer codeFieldContainer;
         private TextView titleView;
         private TextView confirmTextView;
-        private TextView signInWithGoogleView;
         private FrameLayout resendFrameLayout;
         private TextView resendCodeView;
         private FrameLayout cantAccessEmailFrameLayout;
@@ -5644,7 +5634,6 @@ public class LoginActivity extends BaseFragment {
         private boolean resetRequestPending;
         private Bundle currentParams;
         private boolean nextPressed;
-        private GoogleSignInAccount googleAccount;
 
         private int resetAvailablePeriod, resetPendingDate;
         private String phone, emailPhone, email;
@@ -5710,7 +5699,7 @@ public class LoginActivity extends BaseFragment {
             };
 
             addView(codeFieldContainer, LayoutHelper.createLinear(LayoutHelper.WRAP_CONTENT, 42, Gravity.CENTER_HORIZONTAL, 0, setup ? 48 : 32, 0, 0));
-
+            /*
             signInWithGoogleView = new TextView(context);
             signInWithGoogleView.setGravity(Gravity.CENTER);
             signInWithGoogleView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
@@ -5760,6 +5749,7 @@ public class LoginActivity extends BaseFragment {
                                 .build());
                 googleClient.signOut().addOnCompleteListener(command -> getParentActivity().startActivityForResult(googleClient.getSignInIntent(), BasePermissionsActivity.REQUEST_CODE_SIGN_IN_WITH_GOOGLE));
             });
+*/
 
             cantAccessEmailFrameLayout = new FrameLayout(context);
             AndroidUtilities.updateViewVisibilityAnimated(cantAccessEmailFrameLayout, activityMode != MODE_CHANGE_LOGIN_EMAIL && !isSetup, 1f, false);
@@ -5910,7 +5900,6 @@ public class LoginActivity extends BaseFragment {
                 bottomContainer.addView(errorViewSwitcher, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.TOP));
                 bottomContainer.addView(cantAccessEmailFrameLayout, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.TOP));
                 bottomContainer.addView(loginOrView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 16, Gravity.CENTER, 0, 0, 0, 16));
-                bottomContainer.addView(signInWithGoogleView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.BOTTOM, 0, 0, 0, 16));
             }
             addView(bottomContainer, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, 0, 1f));
         }
@@ -5957,7 +5946,6 @@ public class LoginActivity extends BaseFragment {
         public void updateColors() {
             titleView.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteBlackText));
             confirmTextView.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteGrayText6));
-            signInWithGoogleView.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteBlueText4));
             loginOrView.updateColors();
             resendCodeView.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteBlueText4));
             cantAccessEmailView.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteBlueText4));
@@ -6076,7 +6064,6 @@ public class LoginActivity extends BaseFragment {
 
             int v = params.getBoolean("googleSignInAllowed") && PushListenerController.GooglePushListenerServiceProvider.INSTANCE.hasServices() ? VISIBLE : GONE;
             loginOrView.setVisibility(v);
-            signInWithGoogleView.setVisibility(v);
 
             showKeyboard(codeFieldContainer.codeField[0]);
             codeFieldContainer.requestFocus();
@@ -6212,7 +6199,7 @@ public class LoginActivity extends BaseFragment {
             }
 
             code = codeFieldContainer.getCode();
-            if (code.length() == 0 && googleAccount == null) {
+            if (code.length() == 0) {
                 onPasscodeError(false);
                 return;
             }
@@ -6241,15 +6228,15 @@ public class LoginActivity extends BaseFragment {
                 TLRPC.TL_auth_signIn request = new TLRPC.TL_auth_signIn();
                 request.phone_number = requestPhone;
                 request.phone_code_hash = phoneHash;
-                if (googleAccount != null) {
+                /*if (googleAccount != null) {
                     TLRPC.TL_emailVerificationGoogle verification = new TLRPC.TL_emailVerificationGoogle();
                     verification.token = googleAccount.getIdToken();
                     request.email_verification = verification;
-                } else {
+                } else {*/
                     TLRPC.TL_emailVerificationCode verification = new TLRPC.TL_emailVerificationCode();
                     verification.code = code;
                     request.email_verification = verification;
-                }
+                //}
                 request.flags |= 2;
                 req = request;
             }
@@ -6354,15 +6341,15 @@ public class LoginActivity extends BaseFragment {
                         }
                     }
                 }
-                googleAccount = null;
             }), ConnectionsManager.RequestFlagFailOnServerErrors | ConnectionsManager.RequestFlagWithoutLogin);
         }
 
         private void animateSuccess(Runnable callback) {
+            /*
             if (googleAccount != null) {
                 callback.run();
                 return;
-            }
+            }*/
             for (int i = 0; i < codeFieldContainer.codeField.length; i++) {
                 int finalI = i;
                 codeFieldContainer.postDelayed(()-> codeFieldContainer.codeField[finalI].animateSuccessProgress(1f), i * 75L);
